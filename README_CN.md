@@ -30,6 +30,29 @@
 clawhub install tech-news-digest
 ```
 
+## 📦 依赖
+
+### 核心依赖
+
+本技能需要 Python 3.8+ 和两个可选依赖以增强功能：
+
+```bash
+pip install -r requirements.txt
+# 或
+pip install feedparser>=6.0.0 jsonschema>=4.0.0
+```
+
+- **feedparser** — RSS/Atom 订阅源解析（未安装时回退到正则匹配）
+- **jsonschema** — 配置文件的 JSON Schema 验证
+
+### 可选依赖
+
+```bash
+pip install weasyprint
+```
+
+- **weasyprint** — 启用 PDF 报告生成
+
 ## 📊 你会得到什么
 
 基于 **151 个数据源** 的质量评分、去重科技日报：
@@ -92,7 +115,7 @@ cp config/defaults/topics.json workspace/config/tech-news-digest-topics.json
 
 不需要复制整个文件——只写你要改的部分。
 
-## 🔧 可选配置
+## 🔧 环境变量
 
 所有环境变量均为可选，管道会自动使用可用的数据源。
 
@@ -106,7 +129,6 @@ export BRAVE_API_KEY="..."        # 单密钥回退
 export BRAVE_PLAN="free"          # 覆盖速率限制检测: free|pro
 export WEB_SEARCH_BACKEND="auto" # auto|brave|tavily（默认: auto）
 export GITHUB_TOKEN="..."         # GitHub API — 提高速率限制（未设置时自动从 GitHub App 生成）
-pip install weasyprint             # 启用 PDF 报告生成
 ```
 
 ## 🧪 测试
