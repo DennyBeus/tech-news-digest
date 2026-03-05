@@ -35,7 +35,7 @@ PENALTY_DUPLICATE = -10     # Duplicate/very similar title
 PENALTY_OLD_REPORT = -5     # Already in previous digest
 
 # Deduplication thresholds
-TITLE_SIMILARITY_THRESHOLD = 0.85
+TITLE_SIMILARITY_THRESHOLD = 0.75  # Lowered from 0.85 to catch more duplicates
 DOMAIN_DUPLICATE_THRESHOLD = 0.95
 
 
@@ -325,8 +325,13 @@ def merge_article_sources(articles: List[Dict[str, Any]]) -> List[Dict[str, Any]
     return merged
 
 
-def load_previous_digests(archive_dir: Path, days: int = 7) -> Set[str]:
-    """Load titles from previous digests to avoid repeats."""
+def load_previous_digests(archive_dir: Path, days: int = 14) -> Set[str]:
+    """Load titles from previous digests to avoid repeats.
+    
+    Args:
+        archive_dir: Path to digest archive directory
+        days: Number of days to look back (default: 14, increased from 7)
+    """
     if not archive_dir.exists():
         return set()
         
@@ -380,23 +385,61 @@ def apply_previous_digest_penalty(articles: List[Dict[str, Any]],
     return articles
 
 
-def group_by_topics(articles: List[Dict[str, Any]]) -> Dict[str, List[Dict[str, Any]]]:
-    """Group articles by their topics."""
+def group_by_topics(articles: List[Dict[str, Any]], dedup_across_topics: bool = True) -> Dict[str, List[Dict[str, Any]]]:
+    """Group articles by their topics.
+    
+    Args:
+        articles: List of articles to group
+        dedup_across_topics: If True, ensure each article appears in only one topic
+                           (first topic by priority order)
+    """
     topic_groups = {}
+    seen_article_ids: Set[str] = set()  # Track which articles have been placed
+    
+    # Topic priority order (higher priority topics get first pick)
+    # If an article matches multiple topics, it goes to the highest priority one
+    topic_priority = {
+        "llm": 0,
+        "ai_agent": 1,
+        "crypto": 2,
+        "github": 3,
+        "trending": 4,
+        "uncategorized": 5,
+    }
+    
+    # Sort topics by priority for deterministic assignment
+    def get_topic_priority(topic: str) -> int:
+        return topic_priority.get(topic, 99)
     
     for article in articles:
         topics = article.get("topics", [])
         if not topics:
             topics = ["uncategorized"]
-            
-        for topic in topics:
-            if topic not in topic_groups:
-                topic_groups[topic] = []
-            
-            # Add copy with single topic for cleaner grouping
-            article_copy = article.copy()
-            article_copy["primary_topic"] = topic
-            topic_groups[topic].append(article_copy)
+        
+        # Sort topics by priority to pick the best one
+        sorted_topics = sorted(topics, key=get_topic_priority)
+        
+        # Create unique article ID for tracking
+        article_id = normalize_title(article.get("title", ""))
+        
+        if dedup_across_topics:
+            # Check if this article has already been assigned to a topic
+            if article_id in seen_article_ids:
+                logging.debug(f"Skip duplicate across topics: '{article.get('title', '')[:50]}...'")
+                continue
+            seen_article_ids.add(article_id)
+        
+        # Assign to first (highest priority) topic
+        primary_topic = sorted_topics[0]
+        
+        if primary_topic not in topic_groups:
+            topic_groups[primary_topic] = []
+        
+        # Add copy with single topic for cleaner grouping
+        article_copy = article.copy()
+        article_copy["primary_topic"] = primary_topic
+        article_copy["all_topics"] = topics  # Keep original topics for reference
+        topic_groups[primary_topic].append(article_copy)
     
     # Sort articles within each topic by quality score
     for topic in topic_groups:
@@ -599,8 +642,8 @@ Examples:
         # Deduplicate articles
         all_articles = deduplicate_articles(all_articles)
         
-        # Group by topics
-        topic_groups = group_by_topics(all_articles)
+        # Group by topics (with cross-topic deduplication)
+        topic_groups = group_by_topics(all_articles, dedup_across_topics=True)
         
         # Apply per-topic domain limits (max 3 articles per domain per topic)
         for topic in topic_groups:
