@@ -2,7 +2,7 @@
 """
 Unified data collection pipeline for tech-news-digest.
 
-Runs all 5 fetch steps (RSS, Twitter, GitHub, Reddit, Web) in parallel,
+Runs all 6 fetch steps (RSS, Twitter, GitHub, GitHub Trending, Reddit, Web) in parallel,
 then merges + deduplicates + scores into a single output JSON.
 
 Replaces the agent's sequential 6-step tool-call loop with one command,

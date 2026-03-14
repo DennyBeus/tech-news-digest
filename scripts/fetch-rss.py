@@ -24,6 +24,7 @@ from urllib.error import URLError
 from urllib.parse import urljoin
 from pathlib import Path
 from typing import Dict, List, Any, Optional
+import threading
 
 # Try to import feedparser, fall back to regex parsing
 try:
@@ -248,22 +249,26 @@ def _save_rss_cache(cache: Dict[str, Any]) -> None:
 
 
 # Module-level cache, loaded once per run
+# Protected by _rss_cache_lock for thread-safe access
 _rss_cache: Optional[Dict[str, Any]] = None
 _rss_cache_dirty = False
+_rss_cache_lock = threading.Lock()  # Protects concurrent access to _rss_cache
 
 
 def _get_rss_cache(no_cache: bool = False) -> Dict[str, Any]:
     global _rss_cache
-    if _rss_cache is None:
-        _rss_cache = {} if no_cache else _load_rss_cache()
-    return _rss_cache
+    with _rss_cache_lock:
+        if _rss_cache is None:
+            _rss_cache = {} if no_cache else _load_rss_cache()
+        return _rss_cache
 
 
 def _flush_rss_cache() -> None:
     global _rss_cache_dirty
-    if _rss_cache_dirty and _rss_cache is not None:
-        _save_rss_cache(_rss_cache)
-        _rss_cache_dirty = False
+    with _rss_cache_lock:
+        if _rss_cache_dirty and _rss_cache is not None:
+            _save_rss_cache(_rss_cache)
+            _rss_cache_dirty = False
 
 
 def fetch_feed_with_retry(source: Dict[str, Any], cutoff: datetime, no_cache: bool = False) -> Dict[str, Any]:
@@ -276,12 +281,12 @@ def fetch_feed_with_retry(source: Dict[str, Any], cutoff: datetime, no_cache: bo
     
     for attempt in range(RETRY_COUNT + 1):
         try:
-            global _rss_cache_dirty
             req_headers = {"User-Agent": "TechDigest/2.0"}
             
-            # Add conditional headers from cache
-            cache = _get_rss_cache(no_cache)
-            cache_entry = cache.get(url)
+            # Add conditional headers from cache (thread-safe)
+            with _rss_cache_lock:
+                cache = _rss_cache if _rss_cache is not None else {}
+                cache_entry = cache.get(url)
             now = time.time()
             ttl_seconds = RSS_CACHE_TTL_HOURS * 3600
             
@@ -294,12 +299,15 @@ def fetch_feed_with_retry(source: Dict[str, Any], cutoff: datetime, no_cache: bo
             req = Request(url, headers=req_headers)
             try:
                 with urlopen(req, timeout=TIMEOUT) as resp:
-                    # Update cache with response headers
+                    # Update cache with response headers (thread-safe)
                     etag = resp.headers.get("ETag")
                     last_mod = resp.headers.get("Last-Modified")
                     if etag or last_mod:
-                        cache[url] = {"etag": etag, "last_modified": last_mod, "ts": now}
-                        _rss_cache_dirty = True
+                        with _rss_cache_lock:
+                            if _rss_cache is None:
+                                _rss_cache = {}
+                            _rss_cache[url] = {"etag": etag, "last_modified": last_mod, "ts": now}
+                            _rss_cache_dirty = True
                     
                     final_url = resp.url if hasattr(resp, 'url') else url
                     content = resp.read().decode("utf-8", errors="replace")
