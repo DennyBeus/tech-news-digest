@@ -252,7 +252,7 @@ def _save_rss_cache(cache: Dict[str, Any]) -> None:
 # Protected by _rss_cache_lock for thread-safe access
 _rss_cache: Optional[Dict[str, Any]] = None
 _rss_cache_dirty = False
-_rss_cache_lock = threading.Lock()  # Protects concurrent access to _rss_cache
+_rss_cache_lock = threading.RLock()  # Reentrant lock to allow nested acquisition
 
 
 def _get_rss_cache(no_cache: bool = False) -> Dict[str, Any]:
@@ -264,7 +264,7 @@ def _get_rss_cache(no_cache: bool = False) -> Dict[str, Any]:
 
 
 def _flush_rss_cache() -> None:
-    global _rss_cache_dirty
+    global _rss_cache, _rss_cache_dirty
     with _rss_cache_lock:
         if _rss_cache_dirty and _rss_cache is not None:
             _save_rss_cache(_rss_cache)
@@ -278,6 +278,8 @@ def fetch_feed_with_retry(source: Dict[str, Any], cutoff: datetime, no_cache: bo
     url = source["url"]
     priority = source["priority"]
     topics = source["topics"]
+    
+    global _rss_cache, _rss_cache_dirty
     
     for attempt in range(RETRY_COUNT + 1):
         try:
