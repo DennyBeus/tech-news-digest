@@ -131,14 +131,22 @@ def main() -> int:
     parser.add_argument("--verbose", "-v", action="store_true")
     parser.add_argument("--force", action="store_true", help="Force re-fetch ignoring caches")
     parser.add_argument("--enrich", action="store_true", help="Enable full-text enrichment for top articles")
-    parser.add_argument("--skip", type=str, default="", help="Comma-separated list of steps to skip (rss,twitter,github,reddit,web)")
+    parser.add_argument("--skip", type=str, default="", help="Comma-separated list of steps to skip (rss,twitter,github,trending,reddit,web)")
+    parser.add_argument("--only", type=str, default="", help="Comma-separated list of steps to run (rss,twitter,github,trending,reddit,web). Others are skipped.")
     parser.add_argument("--reuse-dir", type=Path, default=None, help="Reuse existing intermediate directory instead of creating new one")
 
     args = parser.parse_args()
     logger = setup_logging(args.verbose)
 
-    # Parse --skip into a set
+    # Parse --skip and --only into sets
     skip_steps = set(s.strip().lower() for s in args.skip.split(',') if s.strip())
+    only_steps = set(s.strip().lower() for s in args.only.split(',') if s.strip())
+    
+    # --only takes precedence: skip everything not in the list
+    if only_steps:
+        all_step_keys = {"rss", "twitter", "github", "github trending", "reddit", "web"}
+        skip_steps = all_step_keys - {k for k in all_step_keys if any(o in k for o in only_steps)}
+        logger.info(f"🎯 --only {args.only} → running: {all_step_keys - skip_steps}")
 
     # Intermediate output paths
     import tempfile
