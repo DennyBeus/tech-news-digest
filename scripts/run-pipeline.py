@@ -134,6 +134,7 @@ def main() -> int:
     parser.add_argument("--skip", type=str, default="", help="Comma-separated list of steps to skip (rss,twitter,github,trending,reddit,web)")
     parser.add_argument("--only", type=str, default="", help="Comma-separated list of steps to run (rss,twitter,github,trending,reddit,web). Others are skipped.")
     parser.add_argument("--reuse-dir", type=Path, default=None, help="Reuse existing intermediate directory instead of creating new one")
+    parser.add_argument("--debug", action="store_true", help="Keep intermediate fetch outputs (rss.json, twitter.json, etc.) alongside final output")
 
     args = parser.parse_args()
     logger = setup_logging(args.verbose)
@@ -270,6 +271,21 @@ def main() -> int:
     meta_path = args.output.with_suffix(".meta.json")
     with open(meta_path, "w") as f:
         json.dump(meta, f, indent=2)
+
+    if args.debug:
+        # Copy intermediate files next to final output for inspection
+        import shutil
+        debug_dir = args.output.parent / f"{args.output.stem}-debug"
+        debug_dir.mkdir(parents=True, exist_ok=True)
+        for fname in os.listdir(_run_dir):
+            src = Path(_run_dir) / fname
+            if src.is_file():
+                shutil.copy2(str(src), str(debug_dir / fname))
+        logger.info(f"🔍 Debug: intermediate files saved to {debug_dir}")
+        meta["debug_dir"] = str(debug_dir)
+        # Rewrite meta with debug_dir
+        with open(meta_path, "w") as f:
+            json.dump(meta, f, indent=2)
 
     if not args.reuse_dir:
         import shutil
