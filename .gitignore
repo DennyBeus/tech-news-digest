@@ -18,3 +18,7 @@ tech-digest-merged-*.json
 
 # User workspace config (override layer)
 /workspace/
+
+# Environment variables
+.env
+docker-compose.override.yml

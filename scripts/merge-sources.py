@@ -367,7 +367,31 @@ def load_previous_digests(archive_dir: Path, days: int = 14) -> Set[str]:
     return seen_titles
 
 
-def apply_previous_digest_penalty(articles: List[Dict[str, Any]], 
+def load_seen_urls_from_db(days: int = 14) -> Set[str]:
+    """Load previously seen URLs from Postgres seen_urls table for cross-run dedup."""
+    try:
+        import os
+        import psycopg2
+        url = os.environ.get("DATABASE_URL")
+        if not url:
+            logging.warning("DATABASE_URL not set, skipping DB dedup")
+            return set()
+        conn = psycopg2.connect(url)
+        with conn.cursor() as cur:
+            cur.execute(
+                "SELECT best_title FROM seen_urls WHERE last_seen_at > NOW() - INTERVAL '%s days'",
+                (days,),
+            )
+            titles = {normalize_title(row[0]) for row in cur.fetchall() if row[0]}
+        conn.close()
+        logging.info(f"Loaded {len(titles)} titles from Postgres seen_urls (last {days} days)")
+        return titles
+    except Exception as e:
+        logging.warning(f"Failed to load seen_urls from DB: {e}")
+        return set()
+
+
+def apply_previous_digest_penalty(articles: List[Dict[str, Any]],
                                 previous_titles: Set[str]) -> List[Dict[str, Any]]:
     """Apply penalty to articles that appeared in previous digests."""
     if not previous_titles:
@@ -508,7 +532,13 @@ Examples:
         type=Path,
         help="Archive directory for previous digest penalty"
     )
-    
+
+    parser.add_argument(
+        "--db-dedup",
+        action="store_true",
+        help="Use Postgres seen_urls table for cross-run dedup (requires DATABASE_URL)"
+    )
+
     parser.add_argument(
         "--verbose", "-v",
         action="store_true",
@@ -629,7 +659,9 @@ Examples:
         
         # Load previous digest titles for penalty
         previous_titles = set()
-        if args.archive_dir:
+        if args.db_dedup:
+            previous_titles = load_seen_urls_from_db()
+        elif args.archive_dir:
             previous_titles = load_previous_digests(args.archive_dir)
         
         # Apply previous digest penalty
