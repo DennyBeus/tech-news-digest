@@ -10,6 +10,9 @@ jsonschema>=4.0.0
 # Postgres storage (required for DB pipeline mode)
 psycopg2-binary>=2.9.0
 
+# Load .env file automatically (required)
+python-dotenv>=1.0.0
+
 # Standard library modules used:
 # - json
 # - urllib.request

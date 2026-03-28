@@ -28,6 +28,9 @@ import re
 import threading
 from abc import ABC, abstractmethod
 from datetime import datetime, timedelta, timezone
+
+from dotenv import load_dotenv
+load_dotenv()
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from urllib.request import urlopen, Request
 from urllib.error import HTTPError

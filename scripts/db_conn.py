@@ -9,6 +9,9 @@ run-pipeline-db.py, and merge-sources.py (--db-dedup).
 import os
 import sys
 
+from dotenv import load_dotenv
+load_dotenv()
+
 try:
     import psycopg2
     import psycopg2.extras

@@ -15,6 +15,9 @@ import sys
 import argparse
 from pathlib import Path
 
+from dotenv import load_dotenv
+load_dotenv()
+
 try:
     import psycopg2
 except ImportError:

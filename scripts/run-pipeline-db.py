@@ -18,6 +18,9 @@ import sys
 import os
 import subprocess
 import time
+
+from dotenv import load_dotenv
+load_dotenv()
 import argparse
 import logging
 from datetime import datetime, timezone

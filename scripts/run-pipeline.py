@@ -29,6 +29,9 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Dict, Any
 
+from dotenv import load_dotenv
+load_dotenv()
+
 SCRIPTS_DIR = Path(__file__).parent
 DEFAULT_TIMEOUT = 180  # per-step timeout in seconds
 
