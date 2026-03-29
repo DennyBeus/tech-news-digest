@@ -140,6 +140,7 @@ def main() -> int:
     parser.add_argument("--only", type=str, default="", help="Comma-separated list of steps to run (rss,twitter,github,trending,reddit,web). Others are skipped.")
     parser.add_argument("--reuse-dir", type=Path, default=None, help="Reuse existing intermediate directory instead of creating new one")
     parser.add_argument("--debug", action="store_true", help="Keep intermediate fetch outputs (rss.json, twitter.json, etc.) alongside final output")
+    parser.add_argument("--db-dedup", action="store_true", default=False, help="Use Postgres seen_urls for cross-run dedup (requires DATABASE_URL)")
 
     args = parser.parse_args()
     logger = setup_logging(args.verbose)
@@ -237,6 +238,8 @@ def main() -> int:
             merge_args += [flag, str(path)]
     if args.archive_dir:
         merge_args += ["--archive-dir", str(args.archive_dir)]
+    if args.db_dedup:
+        merge_args += ["--db-dedup"]
     merge_args += ["--output", str(args.output)]
 
     merge_result = run_step("Merge", "merge-sources.py", merge_args, args.output, timeout=60, force=False)
