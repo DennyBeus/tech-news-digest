@@ -7,6 +7,7 @@ __pycache__/
 *.pyo
 
 # Script output (temp files)
+/logs/
 /output/
 tech-digest-rss-*.json
 tech-digest-twitter-*.json
@@ -22,3 +23,4 @@ tech-digest-merged-*.json
 # Environment variables
 .env
 docker-compose.override.yml
+/venv*/

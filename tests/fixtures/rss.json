@@ -5,99 +5,99 @@
   "config_dir": "(redacted)",
   "hours": 24,
   "feedparser_available": true,
-  "sources_total": 49,
-  "sources_ok": 48,
-  "total_articles": 282,
+  "sources_total": 21,
+  "sources_ok": 21,
+  "total_articles": 120,
   "sources": [
     {
-      "source_id": "theblock-rss",
+      "source_id": "huggingface-rss",
       "source_type": "rss",
-      "name": "The Block",
-      "url": "https://www.theblock.co/rss.xml",
+      "name": "Hugging Face Blog",
+      "url": "https://huggingface.co/blog/feed.xml",
       "priority": true,
       "topics": [
-        "crypto"
+        "ai"
       ],
       "status": "ok",
       "attempts": 1,
       "count": 20,
       "articles": [
         {
-          "title": "ZKsync sets May 4 deprecation date for Lite as project consolidates around Era",
-          "link": "https://www.theblock.co/post/391555/zksync-sets-may-4-deprecation-date-for-lite-as-project-consolidates-around-era?utm_source=rss&utm_medium=rss",
+          "title": "Introducing SmolVLM 2: the smallest video-language model ever",
+          "link": "https://huggingface.co/blog/smolvlm2",
           "date": "2026-02-27T11:31:13+00:00",
           "topics": [
-            "crypto"
+            "ai"
           ]
         },
         {
-          "title": "Minnesota introduces bill to ban crypto kiosks after wave of elder fraud cases",
-          "link": "https://www.theblock.co/post/391541/minnesota-introduces-bill-to-ban-crypto-kiosks?utm_source=rss&utm_medium=rss",
+          "title": "Open-source text-to-video models are catching up",
+          "link": "https://huggingface.co/blog/open-video-models",
           "date": "2026-02-27T10:36:32+00:00",
           "topics": [
-            "crypto"
+            "ai"
           ]
         }
       ]
     },
     {
-      "source_id": "coindesk-rss",
+      "source_id": "openai-rss",
       "source_type": "rss",
-      "name": "CoinDesk",
-      "url": "https://www.coindesk.com/arc/outboundfeeds/rss/",
+      "name": "OpenAI Blog",
+      "url": "https://openai.com/blog/rss.xml",
       "priority": true,
       "topics": [
-        "crypto"
+        "ai"
       ],
       "status": "ok",
       "attempts": 1,
       "count": 20,
       "articles": [
         {
-          "title": "Bitcoin falls with ether, solana while decred, AI-linked tokens advance",
-          "link": "https://www.coindesk.com/markets/2026/02/27/bitcoin-falls-with-ether-solana-while-decred-ai-linked-tokens-advance",
+          "title": "Introducing deep research: A new agentic capability in ChatGPT",
+          "link": "https://openai.com/index/introducing-deep-research/",
           "date": "2026-02-27T11:49:09+00:00",
           "topics": [
-            "crypto"
+            "ai"
           ]
         },
         {
-          "title": "MARA and Block jump double digits in pre-market trading while CoreWeave sinks",
-          "link": "https://www.coindesk.com/markets/2026/02/27/mara-and-block-jump-double-digits-in-pre-market-trading-while-coreweave-sinks",
+          "title": "New reasoning models: o3-mini and o3-mini-high",
+          "link": "https://openai.com/index/reasoning-models-o3-mini/",
           "date": "2026-02-27T10:49:19+00:00",
           "topics": [
-            "crypto"
+            "ai"
           ]
         }
       ]
     },
     {
-      "source_id": "hn-rss",
+      "source_id": "simonwillison-rss",
       "source_type": "rss",
-      "name": "Hacker News Frontpage",
-      "url": "https://hnrss.org/frontpage",
+      "name": "Simon Willison",
+      "url": "https://simonwillison.net/atom/everything/",
       "priority": true,
       "topics": [
-        "frontier-tech"
+        "ai"
       ],
       "status": "ok",
       "attempts": 1,
       "count": 20,
       "articles": [
         {
-          "title": "Lawmakers say US Military used laser to take down Border Protection drone in TX",
-          "link": "https://apnews.com/article/military-laser-border-drone-texas-airport-55aaab7093f7d6dd174f909f3875001c",
+          "title": "Prompt injection defenses are improving but still not solved",
+          "link": "https://simonwillison.net/2026/Feb/27/prompt-injection-defenses/",
           "date": "2026-02-27T11:37:49+00:00",
           "topics": [
-            "frontier-tech"
+            "ai"
           ]
         },
         {
-          "title": "MitID, Denmarks sole digital ID, has been down for over an hour and counting",
-          "link": "https://www.digitaliser.dk/mitid/nyt-fra-mitid/2026/feb/driftsforstyrrelser-mitid",
+          "title": "LLM-powered code review: what works and what doesn't",
+          "link": "https://simonwillison.net/2026/Feb/27/llm-code-review/",
           "date": "2026-02-27T10:52:07+00:00",
           "topics": [
-            "frontier-tech"
+            "ai"
           ]
         }
       ]

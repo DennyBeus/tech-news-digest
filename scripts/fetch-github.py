@@ -572,10 +572,9 @@ Environment Variables:
 # --- GitHub Trending via Search API ---
 
 TRENDING_QUERIES = [
-    {"topic": "llm", "q": "llm large-language-model in:topics,name,description"},
-    {"topic": "ai-agent", "q": "ai-agent autonomous-agent in:topics,name,description"},
-    {"topic": "crypto", "q": "blockchain ethereum solidity defi in:topics,name,description"},
-    {"topic": "frontier-tech", "q": "machine-learning deep-learning in:topics,name,description"},
+    {"topic": "ai", "q": "llm large-language-model in:topics,name,description"},
+    {"topic": "ai", "q": "ai-agent autonomous-agent in:topics,name,description"},
+    {"topic": "ai", "q": "machine-learning deep-learning in:topics,name,description"},
 ]
 
 TRENDING_CACHE_PATH = "/tmp/tech-news-digest-trending-cache.json"

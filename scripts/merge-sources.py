@@ -426,12 +426,10 @@ def group_by_topics(articles: List[Dict[str, Any]], dedup_across_topics: bool = 
     # Topic priority order (higher priority topics get first pick)
     # If an article matches multiple topics, it goes to the highest priority one
     topic_priority = {
-        "llm": 0,
-        "ai_agent": 1,
-        "crypto": 2,
-        "github": 3,
-        "trending": 4,
-        "uncategorized": 5,
+        "ai": 0,
+        "github": 1,
+        "trending": 2,
+        "uncategorized": 3,
     }
     
     # Sort topics by priority for deterministic assignment

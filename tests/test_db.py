@@ -60,7 +60,7 @@ class TestStoreArticles(unittest.TestCase):
         else:
             self.merged_data = {
                 "topics": {
-                    "llm": {
+                    "ai": {
                         "count": 1,
                         "articles": [{
                             "title": "Test Article",
@@ -70,8 +70,8 @@ class TestStoreArticles(unittest.TestCase):
                             "source_id": "test-rss",
                             "source_name": "Test",
                             "quality_score": 10.0,
-                            "primary_topic": "llm",
-                            "topics": ["llm"],
+                            "primary_topic": "ai",
+                            "topics": ["ai"],
                         }]
                     }
                 }

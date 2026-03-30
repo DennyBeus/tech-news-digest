@@ -83,27 +83,27 @@ class TestURLDedup(unittest.TestCase):
 class TestDeduplication(unittest.TestCase):
     def test_removes_url_duplicates(self):
         articles = [
-            {"title": "Article A", "link": "https://example.com/a?ref=rss", "topics": ["llm"]},
-            {"title": "Article A from RSS", "link": "https://example.com/a?ref=twitter", "topics": ["llm"]},
-            {"title": "Article B", "link": "https://example.com/b", "topics": ["llm"]},
+            {"title": "Article A", "link": "https://example.com/a?ref=rss", "topics": ["ai"]},
+            {"title": "Article A from RSS", "link": "https://example.com/a?ref=twitter", "topics": ["ai"]},
+            {"title": "Article B", "link": "https://example.com/b", "topics": ["ai"]},
         ]
         result = deduplicate_articles(articles)
         self.assertEqual(len(result), 2)
 
     def test_removes_title_duplicates(self):
         articles = [
-            {"title": "OpenAI releases GPT-5", "link": "https://a.com/1", "topics": ["llm"]},
-            {"title": "OpenAI releases GPT-5!", "link": "https://b.com/2", "topics": ["llm"]},
-            {"title": "Completely different article", "link": "https://c.com/3", "topics": ["llm"]},
+            {"title": "OpenAI releases GPT-5", "link": "https://a.com/1", "topics": ["ai"]},
+            {"title": "OpenAI releases GPT-5!", "link": "https://b.com/2", "topics": ["ai"]},
+            {"title": "Completely different article", "link": "https://c.com/3", "topics": ["ai"]},
         ]
         result = deduplicate_articles(articles)
         self.assertEqual(len(result), 2)
 
     def test_keeps_different_articles(self):
         articles = [
-            {"title": "Python 3.12 released", "link": "https://a.com/1", "topics": ["llm"]},
-            {"title": "Rust 1.75 announced", "link": "https://b.com/2", "topics": ["llm"]},
-            {"title": "Go 1.22 is out", "link": "https://c.com/3", "topics": ["llm"]},
+            {"title": "Python 3.12 released", "link": "https://a.com/1", "topics": ["ai"]},
+            {"title": "Rust 1.75 announced", "link": "https://b.com/2", "topics": ["ai"]},
+            {"title": "Go 1.22 is out", "link": "https://c.com/3", "topics": ["ai"]},
         ]
         result = deduplicate_articles(articles)
         self.assertEqual(len(result), 3)
@@ -139,24 +139,22 @@ class TestGroupByTopics(unittest.TestCase):
     def test_groups_correctly(self):
         """Test that articles are assigned to their highest-priority topic only."""
         articles = [
-            {"title": "A", "topics": ["llm", "ai-agent"]},
-            {"title": "B", "topics": ["crypto"]},
-            {"title": "C", "topics": ["llm"]},
+            {"title": "A", "topics": ["ai"]},
+            {"title": "B", "topics": ["ai"]},
+            {"title": "C", "topics": ["ai", "github"]},
         ]
         groups = group_by_topics(articles)
-        
-        # Article A should ONLY be in 'llm' (higher priority), not 'ai-agent'
-        # This is the fix: each article appears in only ONE topic
-        self.assertEqual(len(groups["llm"]), 2)  # Articles A and C
-        self.assertEqual(len(groups["crypto"]), 1)  # Article B
-        
-        # Article A should have primary_topic='llm' and all_topics preserved
-        article_a = next(a for a in groups["llm"] if a["title"] == "A")
-        self.assertEqual(article_a["primary_topic"], "llm")
-        self.assertEqual(article_a["all_topics"], ["llm", "ai-agent"])
-        
-        # ai-agent topic should NOT exist since all its articles went to llm
-        self.assertNotIn("ai-agent", groups)
+
+        # All articles should be in 'ai' (highest priority)
+        self.assertEqual(len(groups["ai"]), 3)
+
+        # Article C should have primary_topic='ai' and all_topics preserved
+        article_c = next(a for a in groups["ai"] if a["title"] == "C")
+        self.assertEqual(article_c["primary_topic"], "ai")
+        self.assertEqual(article_c["all_topics"], ["ai", "github"])
+
+        # github topic should NOT exist since article C went to ai
+        self.assertNotIn("github", groups)
 
     def test_no_topics_goes_uncategorized(self):
         articles = [{"title": "A", "topics": []}, {"title": "B"}]
@@ -166,19 +164,20 @@ class TestGroupByTopics(unittest.TestCase):
     def test_cross_topic_deduplication(self):
         """Test that duplicate titles across topics are removed."""
         articles = [
-            {"title": "Same Article", "topics": ["llm", "ai-agent"], "quality_score": 10},
-            {"title": "Same Article", "topics": ["ai-agent"], "quality_score": 8},
-            {"title": "Different Article", "topics": ["crypto"], "quality_score": 5},
+            {"title": "Same Article", "topics": ["ai"], "quality_score": 10},
+            {"title": "Same Article", "topics": ["ai"], "quality_score": 8},
+            {"title": "Different Article", "topics": ["ai"], "quality_score": 5},
         ]
         groups = group_by_topics(articles)
-        
-        # Should have only 2 articles total (1 in llm, 1 in crypto)
+
+        # Should have only 2 articles total (both in ai, deduped by title)
         total = sum(len(articles) for articles in groups.values())
         self.assertEqual(total, 2)
-        
-        # "Same Article" should be in llm with score 10
-        self.assertEqual(len(groups["llm"]), 1)
-        self.assertEqual(groups["llm"][0]["quality_score"], 10)
+
+        # "Same Article" should be in ai with score 10
+        self.assertEqual(len(groups["ai"]), 2)
+        same = next(a for a in groups["ai"] if a["title"] == "Same Article")
+        self.assertEqual(same["quality_score"], 10)
 
 
 class TestFixtureData(unittest.TestCase):

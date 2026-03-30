@@ -5,64 +5,10 @@
   "config_dir": "(redacted)",
   "hours": 24,
   "cutoff": "2026-02-26T12:03:51.224149+00:00",
-  "subreddits_total": 13,
-  "subreddits_ok": 13,
-  "total_posts": 94,
+  "subreddits_total": 8,
+  "subreddits_ok": 8,
+  "total_posts": 50,
   "subreddits": [
-    {
-      "source_id": "reddit-cryptocurrency",
-      "source_type": "reddit",
-      "name": "r/CryptoCurrency",
-      "subreddit": "CryptoCurrency",
-      "sort": "hot",
-      "priority": true,
-      "topics": [
-        "crypto"
-      ],
-      "status": "ok",
-      "attempts": 1,
-      "count": 8,
-      "articles": [
-        {
-          "title": "Netherlands cancelled the 36% tax on unrealized capital gains after huge protest on social media",
-          "link": "https://peakd.com/hive-121566/@vikisecrets/netherlands-cancelled-the-36percent-tax-on-unrealized-capital-gains-after-huge-protest-on-social-media",
-          "reddit_url": "https://www.reddit.com/r/CryptoCurrency/comments/1rf8iwh/netherlands_cancelled_the_36_tax_on_unrealized/",
-          "external_url": "https://peakd.com/hive-121566/@vikisecrets/netherlands-cancelled-the-36percent-tax-on-unrealized-capital-gains-after-huge-protest-on-social-media",
-          "date": "2026-02-26T12:11:30+00:00",
-          "score": 2043,
-          "num_comments": 130,
-          "flair": "GENERAL-NEWS",
-          "is_self": false,
-          "topics": [
-            "crypto"
-          ],
-          "metrics": {
-            "score": 2043,
-            "num_comments": 130,
-            "upvote_ratio": 0.95
-          }
-        },
-        {
-          "title": "The Lobstar Wilde $450K loss wasn't a \"decimal error.\" It was a memory failure that affects every AI agent with a wallet.",
-          "link": "https://www.reddit.com/r/CryptoCurrency/comments/1rfvnb5/the_lobstar_wilde_450k_loss_wasnt_a_decimal_error/",
-          "reddit_url": "https://www.reddit.com/r/CryptoCurrency/comments/1rfvnb5/the_lobstar_wilde_450k_loss_wasnt_a_decimal_error/",
-          "external_url": null,
-          "date": "2026-02-27T03:28:57+00:00",
-          "score": 98,
-          "num_comments": 39,
-          "flair": "ANALYSIS",
-          "is_self": true,
-          "topics": [
-            "crypto"
-          ],
-          "metrics": {
-            "score": 98,
-            "num_comments": 39,
-            "upvote_ratio": 0.86
-          }
-        }
-      ]
-    },
     {
       "source_id": "reddit-artificial",
       "source_type": "reddit",
@@ -71,15 +17,14 @@
       "sort": "hot",
       "priority": false,
       "topics": [
-        "llm",
-        "ai-agent"
+        "ai"
       ],
       "status": "ok",
       "attempts": 1,
       "count": 3,
       "articles": [
         {
-          "title": "Anthropic rejects latest Pentagon offer: ‘We cannot in good conscience accede to their request’",
+          "title": "Anthropic rejects latest Pentagon offer: 'We cannot in good conscience accede to their request'",
           "link": "https://www.cnn.com/2026/02/26/tech/anthropic-rejects-pentagon-offer",
           "reddit_url": "https://www.reddit.com/r/artificial/comments/1rfsjv7/anthropic_rejects_latest_pentagon_offer_we_cannot/",
           "external_url": "https://www.cnn.com/2026/02/26/tech/anthropic-rejects-pentagon-offer",
@@ -89,8 +34,7 @@
           "flair": "News",
           "is_self": false,
           "topics": [
-            "llm",
-            "ai-agent"
+            "ai"
           ],
           "metrics": {
             "score": 455,
@@ -99,7 +43,7 @@
           }
         },
         {
-          "title": "Invisible characters hidden in text can trick AI agents into following secret instructions — we tested 5 models across 8,000+ cases",
+          "title": "Invisible characters hidden in text can trick AI agents into following secret instructions",
           "link": "https://www.moltwire.com/research/reverse-captcha-zw-steganography",
           "reddit_url": "https://www.reddit.com/r/artificial/comments/1rfjew5/invisible_characters_hidden_in_text_can_trick_ai/",
           "external_url": "https://www.moltwire.com/research/reverse-captcha-zw-steganography",
@@ -109,8 +53,7 @@
           "flair": "Discussion",
           "is_self": false,
           "topics": [
-            "llm",
-            "ai-agent"
+            "ai"
           ],
           "metrics": {
             "score": 105,
@@ -128,7 +71,7 @@
       "sort": "hot",
       "priority": false,
       "topics": [
-        "llm"
+        "ai"
       ],
       "status": "ok",
       "attempts": 1,
@@ -145,7 +88,7 @@
           "flair": "Discussion",
           "is_self": true,
           "topics": [
-            "llm"
+            "ai"
           ],
           "metrics": {
             "score": 86,
@@ -164,7 +107,7 @@
           "flair": "Discussion",
           "is_self": true,
           "topics": [
-            "llm"
+            "ai"
           ],
           "metrics": {
             "score": 305,

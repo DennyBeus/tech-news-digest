@@ -5,8 +5,8 @@
   "config_dir": "(redacted)",
   "hours": 24,
   "github_token_used": true,
-  "sources_total": 28,
-  "sources_ok": 28,
+  "sources_total": 19,
+  "sources_ok": 19,
   "total_articles": 8,
   "sources": [
     {
@@ -16,7 +16,7 @@
       "repo": "ollama/ollama",
       "priority": true,
       "topics": [
-        "llm"
+        "ai"
       ],
       "status": "ok",
       "attempts": 1,
@@ -26,18 +26,18 @@
           "title": "ollama v0.17.4",
           "link": "https://github.com/ollama/ollama/releases/tag/v0.17.4",
           "date": "2026-02-27T03:47:22+00:00",
-          "summary": "New models - Qwen 3.5: a family of open-source multimodal models that delivers exceptional utility and performance. - LFM 2: LFM2 is a family of hybrid models designed for on-device deployment....",
+          "summary": "New models - Qwen 3.5: a family of open-source multimodal models that delivers exceptional utility and performance.",
           "topics": [
-            "llm"
+            "ai"
           ]
         },
         {
           "title": "ollama v0.17.3",
           "link": "https://github.com/ollama/ollama/releases/tag/v0.17.3",
           "date": "2026-02-27T02:21:12+00:00",
-          "summary": "What's Changed Fixed issue where tool calls in the Qwen 3 and Qwen 3.5 model families would not be parsed correctly if emitted during thinking Full Changelog**: https://github.com/ollama/ollama/compar...",
+          "summary": "What's Changed Fixed issue where tool calls in the Qwen 3 and Qwen 3.5 model families would not be parsed correctly.",
           "topics": [
-            "llm"
+            "ai"
           ]
         }
       ]
@@ -49,7 +49,7 @@
       "repo": "openclaw/openclaw",
       "priority": true,
       "topics": [
-        "ai-agent"
+        "ai"
       ],
       "status": "ok",
       "attempts": 1,
@@ -59,18 +59,18 @@
           "title": "openclaw v2026.2.26",
           "link": "https://github.com/openclaw/openclaw/releases/tag/v2026.2.26",
           "date": "2026-02-27T00:01:43+00:00",
-          "summary": "Changes - Highlight: External Secrets Management introduces a full openclaw secrets workflow (audit, configure, apply, reload) with runtime snapshot activation, strict secrets apply target-path...",
+          "summary": "Changes - Highlight: External Secrets Management introduces a full openclaw secrets workflow.",
           "topics": [
-            "ai-agent"
+            "ai"
           ]
         },
         {
           "title": "openclaw v2026.2.26-beta.1",
           "link": "https://github.com/openclaw/openclaw/releases/tag/v2026.2.26-beta.1",
           "date": "2026-02-26T22:38:55+00:00",
-          "summary": "Changes - Highlight: External Secrets Management introduces a full openclaw secrets workflow (audit, configure, apply, reload) with runtime snapshot activation, strict secrets apply target-path...",
+          "summary": "Changes - Highlight: External Secrets Management introduces a full openclaw secrets workflow.",
           "topics": [
-            "ai-agent"
+            "ai"
           ]
         }
       ]
@@ -82,7 +82,7 @@
       "repo": "crewAIInc/crewAI",
       "priority": false,
       "topics": [
-        "ai-agent"
+        "ai"
       ],
       "status": "ok",
       "attempts": 1,
@@ -92,9 +92,9 @@
           "title": "crewAI 1.10.0",
           "link": "https://github.com/crewAIInc/crewAI/releases/tag/1.10.0",
           "date": "2026-02-27T00:03:56+00:00",
-          "summary": "What's Changed Features - Enhance MCP tool resolution and related events - Update lancedb version and add lance-namespace packages - Enhance JSON argument parsing and validation in CrewAgentExecutor...",
+          "summary": "What's Changed Features - Enhance MCP tool resolution and related events.",
           "topics": [
-            "ai-agent"
+            "ai"
           ]
         }
       ]

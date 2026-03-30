@@ -18,7 +18,7 @@ DEFAULTS_DIR = Path(__file__).parent.parent / "config" / "defaults"
 class TestLoadSources(unittest.TestCase):
     def test_loads_defaults(self):
         sources = load_merged_sources(DEFAULTS_DIR)
-        self.assertGreater(len(sources), 100)
+        self.assertGreater(len(sources), 50)
 
     def test_all_sources_have_required_fields(self):
         sources = load_merged_sources(DEFAULTS_DIR)
@@ -74,7 +74,7 @@ class TestLoadSources(unittest.TestCase):
     def test_no_overlay_dir(self):
         """Should work fine with no user config dir."""
         sources = load_merged_sources(DEFAULTS_DIR, None)
-        self.assertGreater(len(sources), 100)
+        self.assertGreater(len(sources), 50)
 
 
 class TestLoadTopics(unittest.TestCase):
@@ -91,8 +91,7 @@ class TestLoadTopics(unittest.TestCase):
     def test_topic_ids(self):
         topics = load_merged_topics(DEFAULTS_DIR)
         ids = [t["id"] for t in topics]
-        self.assertIn("llm", ids)
-        self.assertIn("crypto", ids)
+        self.assertIn("ai", ids)
 
 
 class TestSourceCounts(unittest.TestCase):
@@ -101,27 +100,27 @@ class TestSourceCounts(unittest.TestCase):
     def test_total_sources(self):
         sources = load_merged_sources(DEFAULTS_DIR)
         enabled = [s for s in sources if s.get("enabled", True)]
-        self.assertGreaterEqual(len(enabled), 130)
+        self.assertGreaterEqual(len(enabled), 70)
 
     def test_twitter_count(self):
         sources = load_merged_sources(DEFAULTS_DIR)
         tw = [s for s in sources if s["type"] == "twitter"]
-        self.assertEqual(len(tw), 48)
+        self.assertEqual(len(tw), 27)
 
     def test_rss_count(self):
         sources = load_merged_sources(DEFAULTS_DIR)
         rss = [s for s in sources if s["type"] == "rss"]
-        self.assertEqual(len(rss), 62)
+        self.assertEqual(len(rss), 21)
 
     def test_github_count(self):
         sources = load_merged_sources(DEFAULTS_DIR)
         gh = [s for s in sources if s["type"] == "github"]
-        self.assertEqual(len(gh), 28)
+        self.assertEqual(len(gh), 19)
 
     def test_reddit_count(self):
         sources = load_merged_sources(DEFAULTS_DIR)
         rd = [s for s in sources if s["type"] == "reddit"]
-        self.assertEqual(len(rd), 13)
+        self.assertEqual(len(rd), 8)
 
 
 if __name__ == "__main__":
