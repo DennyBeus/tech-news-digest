@@ -1,6 +1,6 @@
 {
   "_description": "Topic definitions for tech digest. Each topic defines a report section with search queries, filters, and display preferences.",
-  "_updated": "2026-03-29",
+  "_updated": "2026-03-31",
   "_version": "3.0.0",
   "topics": [
     {
@@ -10,7 +10,6 @@
       "description": "Artificial Intelligence: LLMs, foundation models, AI agents, autonomous agents, agent frameworks, model releases, benchmarks, and breakthroughs in generative AI",
       "search": {
         "queries": ["LLM latest news", "large language model breakthroughs", "AI Agent latest developments", "autonomous agent framework", "GPT Claude Gemini updates"],
-        "twitter_queries": ["GPT-5", "Claude", "AI agent", "autonomous agent", "LLM"],
         "must_include": ["LLM", "large language model", "foundation model", "language model", "AI agent", "autonomous agent", "agent framework", "agentic", "multi-agent"],
         "exclude": ["tutorial", "how to use", "beginner guide", "game agent", "travel agent"]
       },
