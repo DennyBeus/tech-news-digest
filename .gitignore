@@ -8,11 +8,12 @@ __pycache__/
 
 # Script output (temp files)
 /logs/
+/logs/**/*.log
 /output/
-tech-digest-rss-*.json
-tech-digest-twitter-*.json
-tech-digest-web-*.json
-tech-digest-merged-*.json
+multi-parser-rss-*.json
+multi-parser-twitter-*.json
+multi-parser-web-*.json
+multi-parser-merged-*.json
 
 # Archive reports (generated)
 /archive/
