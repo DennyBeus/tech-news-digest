@@ -207,7 +207,7 @@ python3 scripts/run-pipeline-db.py --hours 48 --output /tmp/td-merged.json --ver
 cd ~/deploy/multi-parser
 chmod +x cron/run-digest.sh
 mkdir -p logs
-(crontab -l 2>/dev/null; echo "0 8,20 * * * $(pwd)/cron/run-digest.sh >> $(pwd)/logs/cron.log 2>&1") | crontab -
+(crontab -l 2>/dev/null; echo "0 5,17 * * * $(pwd)/cron/run-digest.sh >> $(pwd)/logs/cron.log 2>&1") | crontab -
 ```
 
 Проверить что добавилось:
