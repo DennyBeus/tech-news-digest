@@ -642,6 +642,26 @@
       "note": "co-founder leading science"
     },
     {
+      "id": "amwill-twitter",
+      "type": "twitter",
+      "name": "am.will",
+      "handle": "llmjunky",
+      "enabled": true,
+      "priority": true,
+      "topics": ["ai"],
+      "note": "Founder | StarSwap"
+    },
+    {
+      "id": "4nzn-twitter",
+      "type": "twitter",
+      "name": "4nzn",
+      "handle": "paoloanzn",
+      "enabled": true,
+      "priority": true,
+      "topics": ["ai"],
+      "note": "founder gladium.ai"
+    },
+    {
       "id": "pytorch-github",
       "type": "github",
       "name": "PyTorch",
