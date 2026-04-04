@@ -243,7 +243,7 @@ mkdir -p "$LOG_DIR"
 CRON_LINE="$CRON_SCHEDULE $CRON_SCRIPT >> $LOG_DIR/cron.log 2>&1"
 
 # Add only if not already present (avoid duplicates on re-run)
-if crontab -l 2>/dev/null | grep -qF "$CRON_SCRIPT"; then
+if crontab -l 2>/dev/null | grep -v '^\s*#' | grep -qF "$CRON_SCRIPT"; then
     ok "Cron job already present — skipping"
 else
     (crontab -l 2>/dev/null; echo "$CRON_LINE") | crontab -
