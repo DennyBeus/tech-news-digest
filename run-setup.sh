@@ -227,7 +227,7 @@ echo ""
 info "Step 5/6 — validating config"
 
 cd "$PROJECT_DIR"
-python3 scripts/validate-config.py config/defaults
+python3 scripts/validate-config.py --defaults config/defaults
 ok "Config valid"
 
 # ─────────────────────────────────────────────────────────────────────────────
