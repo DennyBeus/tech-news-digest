@@ -1,41 +1,56 @@
 # Multi-Parser
 
-<p align="center">
-  <strong>Детерминированный агрегатор техновостей — дёшево, точно, ноль токенов LLM в пайплайне.</strong>
-</p>
+<a href="https://github.com/VoltAgent/voltagent">
+     <img width="1500" height="801" alt="claude-skills" src="https://github.com/user-attachments/assets/d012a0d2-cec3-4630-ba5e-acc339dbe6cf" />
+</a>
 
-<p align="center">
-  <a href="https://github.com/DennyBeus/multi-parser/actions/workflows/test.yml?branch=main"><img src="https://img.shields.io/github/actions/workflow/status/DennyBeus/multi-parser/test.yml?branch=main&style=for-the-badge" alt="CI status"></a>
-  <a href="https://github.com/DennyBeus/multi-parser/releases"><img src="https://img.shields.io/github/v/release/DennyBeus/multi-parser?include_prereleases&style=for-the-badge" alt="GitHub release"></a>
-  <a href="https://img.shields.io/badge/python-3.8+-blue"><img src="https://img.shields.io/badge/python-3.8+-blue.svg?style=for-the-badge" alt="Python 3.8+"></a>
-</p>
 
-[English](README.md) | **Русский**
+<br/>
+<br/>
 
-## Зачем Multi-Parser?
+<div align="center">
+    <strong>Детерминированный мульти-парсер — дёшево, точно, ноль токенов LLM в пайплайне.</strong>
+    <br />
+    <br />
 
-Multi-Parser создан как **дешёвая и детерминированная замена** скиллу AI-агента для ежедневного дайджеста. Вместо того чтобы тратить токены LLM на сбор, фильтрацию и дедупликацию новостей, этот пайплайн делает всё на чистом Python — без вызовов LLM, без галлюцинаций, без лишних расходов.
+</div>
 
-**Парсер и агент работают отдельно.** Пайплайн записывает структурированные данные в PostgreSQL; агент обращается к базе только когда нужно составить дайджест. Это означает ноль дополнительных токенов на сбор данных — агент тратит токены только на финальное резюме и доставку.
+<div align="center">
+
+[![Tests](https://github.com/DennyBeus/multi-parser/actions/workflows/test.yml/badge.svg)](https://github.com/DennyBeus/multi-parser/actions/workflows/test.yml) [![Last Update](https://img.shields.io/github/last-commit/DennyBeus/multi-parser?label=Last%20update&style=classic)](https://github.com/DennyBeus/multi-parser) ![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/DennyBeus)
+
+</div>
+
+**[English](README.md) | Русский**
+
+Привет, друг! Меня зовут **Denny** и я столкнулся с проблемой избыточного потребления токенов моим агентом для составления ежедневных дайджестов. Тратить в месяц более 50$ на все лишние и порой ошибочные действия агента, который работает через обычный SKILL.md я не могу себе позволить, поэтому мне пришла идея создания Multi-Parser, чтобы парсингом занимался только чистый код, а агент работал с готовыми данными в удобном формате. 
+
+## Зачем нужен Multi-Parser?
+
+Multi-Parser создан как **дешёвая и детерминированная замена** [скиллу](https://github.com/draco-agent/tech-news-digest) для AI-агента, который делает ежедневные дайджесты. Вместо того чтобы тратить токены LLM на сбор, фильтрацию и дедупликацию новостей, этот пайплайн делает всё на чистом Python без вызовов LLM, без галлюцинаций, без лишних расходов.
+
+**Парсер и агент работают отдельно** - это основная идея и принцип этого проекта. Важно было разграничить зону ответсвенности между чистым кодом и работой агента. Пайплайн записывает структурированные данные в PostgreSQL, а агент обращается к базе только когда нужно составить дайджест. Это означает ноль дополнительных токенов на сбор данных - агент тратит токены только на финальное резюме и доставку.
 
 > Конфигурация агента для работы с этим пайплайном будет опубликована в отдельном репозитории.
 
 ## Что он делает
 
-Собирает техновости из **93 источников** 5 типов, оценивает качество, дедуплицирует и сохраняет в PostgreSQL — готово для любого потребителя данных.
+Multi-Parser собирает новости по AI тематике из **91 источника**, оценивает качество, дедуплицирует и сохраняет в PostgreSQL. Я отбирал источники, которые стараются писать лонгриды, а не просто два предложения в одном твите. Мусорные, флуддящие и делающие одни реплаи аккаунты в мой список не попадали. 
 
 | Тип источника | Количество | Примеры |
 |---|---|---|
-| RSS | 21 лента | Simon Willison, Hugging Face, OpenAI, The Verge AI, Ars Technica... |
-| Twitter/X | 45 KOL | @karpathy, @sama, @elonmusk, @VitalikButerin, @AndrewYNg... |
-| GitHub | 19 репозиториев | LangChain, vLLM, DeepSeek, Llama, Ollama, Open WebUI... |
-| Reddit | 8 сабреддитов | r/MachineLearning, r/LocalLLaMA, r/artificial... |
+| RSS | 21 | MIT Technology Review, Hugging Face, OpenAI, Google DeepMind Blog, NVIDIA AI... |
+| Twitter/X | 43 | @karpathy, @sama, @demishassabis, @ilyasut, @AndrewYNg... |
+| GitHub | 19 | LangChain, vLLM, DeepSeek, Llama, Ollama, Open WebUI... |
+| Reddit | 8 | r/MachineLearning, r/LocalLLaMA, r/artificial... |
 | Веб-поиск | по топикам | Brave Search или Tavily API с фильтрами свежести |
+
+Особый акцент я старался делать на источниках, которые в своих текстах не просто пересказывают новость (весь твиттер этим болен), а рождают уникальную идею или мысль.
 
 ## Пайплайн
 
 ```
-cron/run-digest.sh (каждые 12ч)
+cron/run-digest.sh (every 12h)
        │
        ▼
  run-pipeline-db.py
@@ -43,20 +58,20 @@ cron/run-digest.sh (каждые 12ч)
    ├── run-pipeline.py
    │     ├── fetch-rss.py ──────┐
    │     ├── fetch-twitter.py ──┤
-   │     ├── fetch-github.py ───┤  параллельный сбор (~30с)
+   │     ├── fetch-github.py ───┤  parallel fetch (~30s)
    │     ├── fetch-github.py ───┤  (--trending)
-   │     ├── fetch-reddit.py ──┤
+   │     ├── fetch-reddit.py  ──┤
    │     └── fetch-web.py ──────┘
    │              │
    │              ▼
    │     merge-sources.py
-   │     (деdup URL → схожесть заголовков → кросс-топик деdup → скоринг)
+   │     (URL dedup → title similarity → cross-topic dedup → quality scoring)
    │              │
    │              ▼
-   │     enrich-articles.py (опционально, полный текст для топ-статей)
+   │     enrich-articles.py (optional, full-text for top articles)
    │              │
    │              ▼
-   │     итоговый JSON
+   │     merged JSON output
    ├── store-merged.py → PostgreSQL (articles + seen_urls)
    └── pipeline_runs → UPDATE (status='ok')
 ```
