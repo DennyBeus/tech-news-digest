@@ -1,39 +1,57 @@
 # Multi-Parser
 
-<p align="center">
-  <strong>Deterministic tech news aggregator — cheap, accurate, zero LLM tokens in the pipeline.</strong>
-</p>
+<a href="https://github.com/DennyBeus/multi-parser">
+     <img width="1500" height="801" alt="Multi-Parser" src="https://raw.githubusercontent.com/DennyBeus/multi-parser/main/assets/readme_image.jpg" />
+</a>
 
-<p align="center">
-  <a href="https://github.com/DennyBeus/multi-parser/actions/workflows/test.yml?branch=main"><img src="https://img.shields.io/github/actions/workflow/status/DennyBeus/multi-parser/test.yml?branch=main&style=for-the-badge" alt="CI status"></a>
-  <a href="https://github.com/DennyBeus/multi-parser/releases"><img src="https://img.shields.io/github/v/release/DennyBeus/multi-parser?include_prereleases&style=for-the-badge" alt="GitHub release"></a>
-  <a href="https://img.shields.io/badge/python-3.8+-blue"><img src="https://img.shields.io/badge/python-3.8+-blue.svg?style=for-the-badge" alt="Python 3.8+"></a>
-</p>
 
-**English** | [Русский](README_RU.md)
+<br/>
+<br/>
+
+<div align="center">
+    <strong>Deterministic multi-parser — stop paying for your agent's extra work and mistakes.</strong>
+    <br />
+    <br />
+
+</div>
+
+<div align="center">
+
+[![Tests](https://github.com/DennyBeus/multi-parser/actions/workflows/test.yml/badge.svg)](https://github.com/DennyBeus/multi-parser/actions/workflows/test.yml) [![Last Update](https://img.shields.io/github/last-commit/DennyBeus/multi-parser?label=Last%20update&style=classic)](https://github.com/DennyBeus/multi-parser) ![GitHub License](https://img.shields.io/github/license/DennyBeus/multi-parser) ![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/DennyBeus)
+
+</div>
+
+**English | [Русский](README_RU.md)**
+
+Hey there! My name is **Denny**, and I ran into a problem with my agent burning through too many tokens just to put together daily digests. Spending over $50 a month on all the unnecessary and sometimes outright wrong actions of an agent running off a plain SKILL.md was something I couldn't afford, so I came up with the idea for Multi-Parser — let pure code handle the parsing, and let the agent work with ready-made data in a convenient format.
+> I went into more detail about this issue in these two posts: [Post-1](https://t.me/dennyfun/300) and [Post-2](https://t.me/dennyfun/301).
+
 
 ## Why Multi-Parser?
 
-Multi-Parser was built as a **cheap and deterministic replacement** for an AI agent's daily digest skill. Instead of burning LLM tokens on fetching, filtering, and deduplicating news, this pipeline does it all with pure Python — no LLM calls, no hallucinations, no wasted tokens.
+Multi-Parser was built as a **cheap and deterministic replacement** for an AI agent's daily digest [skill](https://github.com/draco-agent/tech-news-digest). Instead of burning LLM tokens on fetching, filtering, and deduplicating news, this pipeline does everything in pure Python — no LLM calls, no hallucinations, no wasted spend.
 
-**The parser and the agent work separately.** The pipeline writes structured data to Postgres; the agent reads from the database when it's time to compose a digest. This means zero extra token spend on data collection — the agent only uses tokens for the final summary and delivery.
+**The parser and the agent work separately** — that's the core idea and guiding principle of this project. It was important to draw a clear line of responsibility between pure code and the agent's work. The pipeline writes structured data to PostgreSQL, and the agent only queries the database when it's time to compose a digest. This means zero extra tokens spent on data collection — the agent only uses tokens for the final summary and delivery.
 
 > Agent configuration for working with this pipeline will be published in a separate repository.
 
 ## What It Does
 
-Collects tech news from **93 sources** across 5 source types, scores and deduplicates them, and stores the result in PostgreSQL — ready for any downstream consumer.
+Multi-Parser collects AI-related news from **93 sources**, scores quality, deduplicates, and stores everything in PostgreSQL. I hand-picked sources that tend to write in-depth content rather than just two sentences in a tweet. Spammy, flooding, and reply-only accounts didn't make the cut.
 
 | Source Type | Count | Examples |
 |---|---|---|
-| RSS | 21 feeds | Simon Willison, Hugging Face, OpenAI, The Verge AI, Ars Technica... |
-| Twitter/X | 45 KOLs | @karpathy, @sama, @elonmusk, @VitalikButerin, @AndrewYNg... |
-| GitHub | 19 repos | LangChain, vLLM, DeepSeek, Llama, Ollama, Open WebUI... |
-| Reddit | 8 subs | r/MachineLearning, r/LocalLLaMA, r/artificial... |
+| RSS | 21 | MIT Technology Review, Hugging Face, OpenAI, Google DeepMind Blog, NVIDIA AI... |
+| Twitter/X | 45 | @karpathy, @sama, @demishassabis, @ilyasut, @AndrewYNg... |
+| GitHub | 19 | LangChain, vLLM, DeepSeek, Llama, Ollama, Open WebUI... |
+| Reddit | 8 | r/MachineLearning, r/LocalLLaMA, r/artificial... |
 | Web Search | topic-based | Brave Search or Tavily API with freshness filters |
+
+I especially focused on sources that don't just rehash the news (all of Twitter is guilty of this), but produce original thoughts or ideas, or are the de facto primary source.
 
 ## Pipeline
 
+The pipeline is dead simple and starts with a regular cron job that runs Python scripts for each source on a schedule. Then other scripts filter, deduplicate, and score the quality of the parsed data, after which a final JSON file is produced and inserted into the database.
 ```
 cron/run-digest.sh (every 12h)
        │
@@ -63,137 +81,136 @@ cron/run-digest.sh (every 12h)
 
 ### Quality Scoring
 
+The project has a scoring system to ensure that only fresh and relevant news has the highest chance of making it into the final digest.
+
 | Signal | Score | Condition |
 |---|---|---|
-| Multi-source cross-ref | +5 | Same story from 2+ source types |
+| Cross-source | +5 | Same story from 2+ source types |
 | Priority source | +3 | Key blogs/accounts |
 | Recency | +2 | Published < 24h ago |
 | Twitter engagement | +1 to +5 | Tiered by likes/retweets |
 | Reddit score | +1 to +5 | Tiered by upvotes |
-| Duplicate | -10 | Same URL seen |
+| Duplicate | -10 | Same URL already seen |
 | Already reported | -5 | URL in seen_urls (last 14 days) |
-
-### Deduplication
-
-Three-phase dedup: **URL normalization** → **title similarity** (0.75 threshold via SequenceMatcher with token-based bucketing) → **cross-topic dedup** (each article appears in one topic only). Domain limit: max 3 articles per domain per topic (exempt: x.com, github.com, reddit.com).
 
 ## Quick Start
 
 ### Prerequisites
 
-- Python 3.8+
-- Docker & Docker Compose (for PostgreSQL)
-- At least one API key for Twitter or Web Search (optional but recommended)
+Bare minimum:
+- A small Linux server (VPS)
+- At least one API key for Twitter or web search (optional but recommended)
+
+For Twitter, I recommend using the affordable [twitterapi.io](http://twitterapi.io/?ref=dennybeus) service.
+For web search, I use the free API from [tavily.com](https://app.tavily.com/home).
+
+### Environment Variables Setup
+
+All API keys are optional. The pipeline can work with whatever you have, but I strongly recommend adding the following to your `.env` file:
+- `TWITTERAPI_IO_KEY`
+- `TAVILY_API_KEY` (1,000 free tokens per month)
+- `GITHUB_TOKEN` (bypasses rate limits)
+
+And make sure to edit these fields:
+- `POSTGRES_USER` (replace `user` at the end of multi_parser_user with your name)
+- `POSTGRES_PASSWORD` (set your own password)
+- `DATABASE_URL` (replace multi_parser_user and changeme with your `POSTGRES_USER` and `POSTGRES_PASSWORD` respectively)
+
+```bash
+# =============================================================================
+# Postgres — must match values in docker-compose.yml
+# =============================================================================
+POSTGRES_DB=multi_parser
+POSTGRES_USER=multi_parser_user
+POSTGRES_PASSWORD=changeme
+
+# DATABASE_URL is derived from the three variables above:
+# postgresql://<POSTGRES_USER>:<POSTGRES_PASSWORD>@127.0.0.1:5432/<POSTGRES_DB>
+DATABASE_URL=postgresql://multi_parser_user:changeme@127.0.0.1:5432/multi_parser
+
+# =============================================================================
+# Twitter/X  (at least one recommended)
+# =============================================================================
+GETX_API_KEY=
+TWITTERAPI_IO_KEY=
+X_BEARER_TOKEN=
+
+# =============================================================================
+# Web search  (at least one recommended)
+# =============================================================================
+BRAVE_API_KEYS=
+TAVILY_API_KEY=
+
+# =============================================================================
+# GitHub  (optional — improves rate limits)
+# =============================================================================
+GITHUB_TOKEN=
+```
 
 ### Automated Setup (VPS / Linux)
 
-The `run-setup.sh` script handles everything in one run — ideal for a fresh VPS:
+So you don't have to type out every command by hand, I made a convenient one-shot setup script `run-setup.sh` that will handle the following for you:
 
-```bash
-git clone https://github.com/DennyBeus/multi-parser.git
-cd multi-parser
-
-# 1. Configure environment
-cp .env.example .env
-nano .env    # set POSTGRES_PASSWORD and DATABASE_URL at minimum
-
-# 2. Run setup (installs deps, starts Postgres, applies migrations, sets up cron)
-chmod +x run-setup.sh
-./run-setup.sh
-```
-
-The script is idempotent — safe to re-run. It will:
 1. Install `python3-pip`, `docker.io`, `docker-compose`, `apparmor`
-2. Add current user to the `docker` group
+2. Add the current user to the `docker` group
 3. Install Python dependencies from `requirements.txt`
 4. Start PostgreSQL 16 via Docker Compose
 5. Apply database migrations
 6. Validate config
 7. Set up cron (05:00 and 17:00 UTC daily)
 
+All you need to do is run the following commands:
+
+```bash
+# 1. Clone the repository
+git clone git@github.com:DennyBeus/multi-parser.git
+cd multi-parser
+
+# 2. Configure environment variables
+cp .env.example .env
+nano .env    # at minimum, set POSTGRES_PASSWORD and DATABASE_URL
+
+# 3. Run setup (installs deps, starts Postgres, applies migrations, sets up cron)
+chmod +x run-setup.sh
+./run-setup.sh
+```
+
+The script is idempotent, meaning it's safe to run multiple times.
+
 ### Manual Setup
 
-```bash
-# Install dependencies
-pip install -r requirements.txt
-
-# Start PostgreSQL
-docker-compose up -d
-
-# Apply migrations
-python db/migrate.py
-
-# Validate config
-python scripts/validate-config.py config/defaults
-
-# Test run (JSON only, no DB)
-python scripts/run-pipeline.py --only rss,github --output /tmp/test-digest.json
-
-# Full run with DB storage
-python scripts/run-pipeline-db.py --hours 48 --output /tmp/digest.json --verbose
-```
-
-## Environment Variables
-
-All API keys are optional. The pipeline runs with whatever sources are available.
-
-```bash
-# PostgreSQL (required for DB mode)
-POSTGRES_PASSWORD=your_password
-DATABASE_URL=postgresql://multi_parser_user:your_password@127.0.0.1:5432/multi_parser
-
-# Twitter/X — at least one recommended (auto priority: getxapi > twitterapiio > official)
-GETX_API_KEY=
-TWITTERAPI_IO_KEY=
-X_BEARER_TOKEN=
-
-# Web Search — at least one recommended (auto: brave > tavily)
-BRAVE_API_KEYS=k1,k2,k3    # comma-separated for rotation
-TAVILY_API_KEY=
-
-# GitHub — optional, improves rate limits
-GITHUB_TOKEN=
-```
+You can also run all the commands yourself by following the setup guide in [SETUP.md](SETUP.md), but the `run-setup.sh` script mentioned above does exactly the same thing.
 
 ## Configuration
 
 ### Sources & Topics
 
-- `config/defaults/sources.json` — 93 built-in sources (21 RSS, 45 Twitter, 19 GitHub, 8 Reddit)
-- `config/defaults/topics.json` — topic definitions with search queries and keyword filters
-
-User overrides in `workspace/config/` take priority. Your overlay **merges** with defaults:
-
-```json
-{
-  "sources": [
-    {"id": "my-blog", "type": "rss", "enabled": true, "url": "https://myblog.com/feed"},
-    {"id": "openai-blog", "enabled": false}
-  ]
-}
-```
-
-- **Override** a source by matching its `id`
-- **Add** new sources with a unique `id`
-- **Disable** a built-in source with `"enabled": false`
+- `config/defaults/sources.json` — 93 built-in sources (21 RSS, 45 Twitter, 19 GitHub, 8 Reddit) that you can add, remove, and edit directly through your agent or manually on the server.
+- `config/defaults/topics.json` — topic definitions with search queries and filters. Currently there's only one topic, `ai`, but you can add new ones matching your interests through the same agent.
+> You don't even need to restart the project — all changes take effect immediately since all scripts run exclusively via cron.
 
 ### Cron Schedule
 
-Default: every 12 hours (05:00 and 17:00 UTC). Change in `run-setup.sh` before running:
+Default: every 12 hours (05:00 and 17:00 UTC). Edit in `run-setup.sh` before running:
 
 ```bash
 CRON_SCHEDULE="0 5,17 * * *"
 ```
 
+You can easily switch to once every 24 hours (05:00 UTC) by changing it to:
+```bash
+CRON_SCHEDULE="0 5 * * *"
+```
+
 ## Database
 
-PostgreSQL 16 (Docker) with 3 tables:
+PostgreSQL 16 (Docker), 3 tables:
 
 | Table | Purpose |
 |---|---|
 | `pipeline_runs` | Tracks each cron execution (timing, status, error) |
 | `articles` | Merged/scored articles per run (UNIQUE on run_id + normalized_url) |
-| `seen_urls` | Cross-run dedup — replaces archive scanning |
+| `seen_urls` | Cross-run deduplication — replaces archive scanning |
 
 Auto-cleanup: articles older than 90 days and seen_urls older than 180 days are removed after each pipeline run.
 
@@ -201,8 +218,12 @@ Memory tuning for 4GB RAM VPS is pre-configured in `docker-compose.yml` (256MB s
 
 ## Project Structure
 
+After the first pipeline run, a `/logs/` folder will be created in the project root where task statuses are recorded after each cron trigger. I intentionally placed this folder inside the project so that the future agent can more easily find and explain where the project logs are, and so they don't get mixed up with logs from other programs, as would happen with a system directory like `/tmp/`.
+
 ```
 multi-parser/
+├── assets/
+│   └── readme_image.jpg          # README image
 ├── config/
 │   ├── defaults/
 │   │   ├── sources.json          # 93 built-in sources
@@ -243,46 +264,36 @@ multi-parser/
 ├── docker-compose.yml            # PostgreSQL 16 + tuning
 ├── requirements.txt              # 4 dependencies
 ├── run-setup.sh                  # one-shot VPS setup
+├── SETUP.md                      # step-by-step manual setup guide
+├── LICENSE                       # project license
 ├── .env.example                  # environment template
 └── .github/workflows/test.yml    # CI: Python 3.9 + 3.12
 ```
 
 ## Dependencies
 
-Minimal by design — 4 packages:
+Just 4 packages:
 
 ```
-feedparser>=6.0.0        # RSS/Atom parsing (fallback to regex if missing)
+feedparser>=6.0.0        # RSS/Atom parsing (falls back to regex without it)
 jsonschema>=4.0.0        # config validation
 psycopg2-binary>=2.9.0   # PostgreSQL driver
 python-dotenv>=1.0.0     # .env file loading
 ```
 
-## Running Individual Fetchers
-
-Each fetch script works standalone:
-
-```bash
-python scripts/fetch-rss.py --defaults config/defaults --output rss.json
-python scripts/fetch-twitter.py --defaults config/defaults --output twitter.json --hours 48
-python scripts/fetch-github.py --defaults config/defaults --output github.json
-python scripts/fetch-reddit.py --defaults config/defaults --output reddit.json
-python scripts/fetch-web.py --defaults config/defaults --output web.json
-```
-
 ## Tests
+
+CI runs on Python 3.9 and 3.12 via GitHub Actions.
 
 ```bash
 # All tests
 python -m unittest discover -s tests -v
 
-# Single test file
+# Single file
 python -m unittest tests/test_merge.py -v
 python -m unittest tests/test_db.py -v
 ```
 
-CI runs on Python 3.9 and 3.12 via GitHub Actions.
-
 ## Origin
 
-Forked from [draco-agent/tech-news-digest](https://github.com/draco-agent/tech-news-digest) and reworked: consolidated to a single AI topic, updated sources, added automated VPS setup, and adapted for use as a standalone data backend for an AI agent's daily digest workflow.
+Multi-Parser is a reworked fork of [draco-agent/tech-news-digest](https://github.com/draco-agent/tech-news-digest) that I turned into a super cost-effective solution suitable for any user, where anyone can customize my setup to their needs or keep scaling the parser for their own AI agent.

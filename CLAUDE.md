@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Multi-Parser is an automated tech news aggregation pipeline that collects articles from 6 source types (RSS, Twitter/X, GitHub releases, GitHub trending, Reddit, web search), applies quality scoring, deduplicates, and stores results in Postgres. Runs on VPS via cron — no LLM in the data pipeline. Python 3.8+, minimal dependencies.
+Multi-Parser is an automated tech news aggregation pipeline that collects articles from 5 source types (RSS, Twitter/X, GitHub releases + trending, Reddit, web search), applies quality scoring, deduplicates, and stores results in Postgres. Runs on VPS via cron — no LLM in the data pipeline. Python 3.8+, minimal dependencies.
 
 ## Commands
 
@@ -103,8 +103,8 @@ pip install -r requirements.txt
 
 Two-layer config overlay: defaults in `config/defaults/` are merged with optional user overrides from a workspace `config/` directory. User sources override defaults by matching `id`. Handled by `scripts/config_loader.py`.
 
-- `config/defaults/sources.json` — 151 sources (RSS feeds, Twitter handles, GitHub repos, subreddits)
-- `config/defaults/topics.json` — 4 topics: llm, ai-agent, crypto, frontier-tech
+- `config/defaults/sources.json` — 93 sources (21 RSS, 45 Twitter, 19 GitHub, 8 Reddit)
+- `config/defaults/topics.json` — 1 topic: ai
 
 ### Quality Scoring (merge-sources.py)
 
@@ -112,7 +112,7 @@ Articles are scored by: priority source (+3), recency <24h (+2), Twitter engagem
 
 ### Deduplication (merge-sources.py)
 
-Three phases: URL normalization, title similarity (threshold 0.75 via SequenceMatcher with token-based bucketing), and cross-topic dedup (each article appears in one topic only, priority order: llm > ai_agent > crypto > frontier-tech).
+Three phases: URL normalization, title similarity (threshold 0.75 via SequenceMatcher with token-based bucketing), and cross-topic dedup (each article appears in one topic only).
 
 Domain limits: max 3 articles per domain per topic (exempt: x.com, twitter.com, github.com, reddit.com).
 
