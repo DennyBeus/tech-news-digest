@@ -74,7 +74,7 @@ pip install -r requirements.txt
   run-pipeline-db.py
     ├── INSERT pipeline_runs (status='running')
     ├── run-pipeline.py
-    │     ├── fetch-rss.py ──────┐
+    │     ├── fetch-rss.py  ──────┐
     │     ├── fetch-twitter.py ───┤
     │     ├── fetch-github.py ────┤ (parallel, ~30s)
     │     ├── fetch-github.py ────┤ (--trending)
