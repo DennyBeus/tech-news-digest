@@ -9,7 +9,7 @@
 <br/>
 
 <div align="center">
-    <strong>Детерминированный мульти-парсер — дёшево, точно, ноль токенов LLM в пайплайне.</strong>
+    <strong>Детерминированный мульти-парсер — не плати за лишнюю работу и ошибки твоего агента.</strong>
     <br />
     <br />
 
@@ -17,7 +17,7 @@
 
 <div align="center">
 
-[![Tests](https://github.com/DennyBeus/multi-parser/actions/workflows/test.yml/badge.svg)](https://github.com/DennyBeus/multi-parser/actions/workflows/test.yml) [![Last Update](https://img.shields.io/github/last-commit/DennyBeus/multi-parser?label=Last%20update&style=classic)](https://github.com/DennyBeus/multi-parser) ![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/DennyBeus)
+[![Tests](https://github.com/DennyBeus/multi-parser/actions/workflows/test.yml/badge.svg)](https://github.com/DennyBeus/multi-parser/actions/workflows/test.yml) [![Last Update](https://img.shields.io/github/last-commit/DennyBeus/multi-parser?label=Last%20update&style=classic)](https://github.com/DennyBeus/multi-parser) ![GitHub License](https://img.shields.io/github/license/DennyBeus/multi-parser) ![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/DennyBeus)
 
 </div>
 
