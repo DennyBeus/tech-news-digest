@@ -108,7 +108,7 @@ python3 scripts/run-pipeline-db.py --hours 48 --output /tmp/td-merged.json --ver
 
 ---
 
-## Шаг 9 — Настроить cron (каждые 12 часов)
+## Шаг 9 — Настроить cron (каждые 24 часа)
 
 Выполнять из папки проекта — `$(pwd)` автоматически подставит правильный путь:
 
@@ -116,7 +116,7 @@ python3 scripts/run-pipeline-db.py --hours 48 --output /tmp/td-merged.json --ver
 cd ~/deploy/multi-parser
 chmod +x cron/run-digest.sh
 mkdir -p logs
-(crontab -l 2>/dev/null; echo "0 5,17 * * * $(pwd)/cron/run-digest.sh >> $(pwd)/logs/cron.log 2>&1") | crontab -
+(crontab -l 2>/dev/null; echo "0 6 * * * $(pwd)/cron/run-digest.sh >> $(pwd)/logs/cron.log 2>&1") | crontab -
 ```
 
 Проверить что добавилось:
@@ -129,6 +129,8 @@ crontab -l
 ---
 
 ## Доп. — Подключение DataGrip удалённо (SSH-туннель)
+
+DataGrip я использую лишь для удобного просмотра таблиц БД. Этот шаг опционален.
 
 Порт PostgreSQL намеренно привязан только к `127.0.0.1` — в интернет не торчит. Для DataGrip используй SSH-туннель: безопасно, не нужно открывать порт на сервере.
 

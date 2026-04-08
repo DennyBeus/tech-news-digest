@@ -53,7 +53,7 @@ I especially focused on sources that don't just rehash the news (all of Twitter 
 
 The pipeline is dead simple and starts with a regular cron job that runs Python scripts for each source on a schedule. Then other scripts filter, deduplicate, and score the quality of the parsed data, after which a final JSON file is produced and inserted into the database.
 ```
-cron/run-digest.sh (every 12h)
+cron/run-digest.sh (every 24h)
        │
        ▼
  run-pipeline-db.py
@@ -191,15 +191,10 @@ You can also run all the commands yourself by following the setup guide in [SETU
 
 ### Cron Schedule
 
-Default: every 12 hours (05:00 and 17:00 UTC). Edit in `run-setup.sh` before running:
+Default: every 24 hours (06:00 UTC). Edit in `run-setup.sh` before running:
 
 ```bash
-CRON_SCHEDULE="0 5,17 * * *"
-```
-
-You can easily switch to once every 24 hours (05:00 UTC) by changing it to:
-```bash
-CRON_SCHEDULE="0 5 * * *"
+CRON_SCHEDULE="0 6 * * *"
 ```
 
 ## Database
@@ -230,7 +225,7 @@ multi-parser/
 │   │   └── topics.json           # topic definitions & search queries
 │   └── schema.json               # JSON Schema for config validation
 ├── cron/
-│   └── run-digest.sh             # cron wrapper (every 12h)
+│   └── run-digest.sh             # cron wrapper (every 24h)
 ├── db/
 │   ├── migrate.py                # migration runner
 │   └── migrations/

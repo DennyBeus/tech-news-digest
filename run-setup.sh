@@ -12,7 +12,7 @@
 #   3. Starts PostgreSQL via docker-compose
 #   4. Applies DB migrations
 #   5. Validates config
-#   6. Sets up cron job (every 12h at 05:00 and 17:00)
+#   6. Sets up cron job (every 24h at 06:00 UTC)
 #
 # Prerequisites:
 #   - Fill in .env before running (copy from .env.example, then edit)
@@ -25,8 +25,8 @@ set -euo pipefail
 # Change these if you want a different cron schedule or log retention.
 # ─────────────────────────────────────────────────────────────────────────────
 
-# Cron schedule for the digest pipeline (default: 05:00 and 17:00 every day)
-CRON_SCHEDULE="0 5,17 * * *"
+# Cron schedule for the digest pipeline (default: 06:00 UTC every day)
+CRON_SCHEDULE="0 6 * * *"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Internals — do not edit below this line
@@ -269,6 +269,6 @@ echo "  2. Test pipeline (no DB, fast):"
 echo "     cd $PROJECT_DIR && python3 scripts/run-pipeline.py --only rss,github --output /tmp/test-digest.json"
 echo "  3. Test full pipeline with DB:"
 echo "     cd $PROJECT_DIR && python3 scripts/run-pipeline-db.py --hours 48 --output /tmp/td-merged.json --verbose"
-echo "  4. Cron will run automatically at 05:00 and 17:00 UTC"
+echo "  4. Cron will run automatically at 06:00 UTC"
 echo "     Logs: $LOG_DIR/cron.log"
 echo ""
