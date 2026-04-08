@@ -33,6 +33,8 @@ Multi-Parser was built as a **cheap and deterministic replacement** for an AI ag
 
 **The parser and the agent work separately** — that's the core idea and guiding principle of this project. It was important to draw a clear line of responsibility between pure code and the agent's work. The pipeline writes structured data to PostgreSQL, and the agent only queries the database when it's time to compose a digest. This means zero extra tokens spent on data collection — the agent only uses tokens for the final summary and delivery.
 
+Multi-Parser is a great fit for those running Claude Code or Codex on a server via a subscription. The project’s architecture is built around agent-based calls rather than model API keys, so you won’t have to pay extra, everything is already included in your subscription.
+
 > Agent configuration for working with this pipeline will be published in a separate repository.
 
 ## What It Does
