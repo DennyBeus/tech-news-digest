@@ -175,7 +175,7 @@ def markdown_to_html(md_content: str) -> str:
 PDF_CSS = """
 @page {
     size: A4;
-    margin: 2cm 2.5cm;
+    margin: 1.2cm 1.8cm;
     @top-center {
         content: "Tech Digest";
         font-size: 9px;
@@ -193,34 +193,34 @@ PDF_CSS = """
 body {
     font-family: 'Noto Sans CJK SC', 'Noto Sans SC', 'PingFang SC',
                  'Microsoft YaHei', 'Segoe UI', Roboto, sans-serif;
-    font-size: 11pt;
-    line-height: 1.7;
+    font-size: 8.5pt;
+    line-height: 1.45;
     color: #1a1a1a;
 }
 
 h1 {
-    font-size: 22pt;
+    font-size: 16pt;
     color: #111;
-    border-bottom: 3px solid #2563eb;
-    padding-bottom: 8px;
-    margin-bottom: 20px;
+    border-bottom: 2px solid #2563eb;
+    padding-bottom: 5px;
+    margin-bottom: 12px;
     margin-top: 0;
 }
 
 h2 {
-    font-size: 15pt;
+    font-size: 11pt;
     color: #1e40af;
-    margin-top: 28px;
-    margin-bottom: 12px;
-    padding-bottom: 4px;
+    margin-top: 16px;
+    margin-bottom: 6px;
+    padding-bottom: 2px;
     border-bottom: 1px solid #e5e7eb;
 }
 
 h3 {
-    font-size: 13pt;
+    font-size: 9pt;
     color: #374151;
-    margin-top: 20px;
-    margin-bottom: 8px;
+    margin-top: 10px;
+    margin-bottom: 4px;
 }
 
 blockquote {
@@ -234,13 +234,13 @@ blockquote {
 }
 
 ul {
-    padding-left: 20px;
-    margin: 8px 0;
+    padding-left: 14px;
+    margin: 4px 0;
 }
 
 li {
-    margin-bottom: 10px;
-    line-height: 1.6;
+    margin-bottom: 5px;
+    line-height: 1.4;
 }
 
 li.source-link {
