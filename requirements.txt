@@ -1,4 +1,4 @@
-# Tech Digest Python Dependencies
+# Digest Python Dependencies
 # Install with: pip install -r requirements.txt
 
 # RSS parsing (optional, will fallback to regex if not available)

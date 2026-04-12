@@ -82,7 +82,7 @@ def render_markdown(articles: list[dict], hours: int) -> str:
 
     now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     lines = [
-        f"# Tech Digest — {now}",
+        f"# Digest — {now}",
         f"> Статьи за последние {hours}ч | Всего: {len(articles)} | Мин. скор: {articles[-1]['quality_score']:.1f}",
         "",
     ]

@@ -1,5 +1,5 @@
 {
-  "_description": "Topic definitions for tech digest. Each topic defines a report section with search queries, filters, and display preferences.",
+  "_description": "Topic definitions for digest. Each topic defines a report section with search queries, filters, and display preferences.",
   "_updated": "2026-03-31",
   "_version": "3.0.0",
   "topics": [

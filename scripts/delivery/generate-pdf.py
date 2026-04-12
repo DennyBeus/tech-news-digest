@@ -177,7 +177,7 @@ PDF_CSS = """
     size: A4;
     margin: 1.2cm 1.8cm;
     @top-center {
-        content: "Tech Digest";
+        content: "Digest";
         font-size: 9px;
         color: #999;
         font-family: 'Noto Sans CJK SC', 'Noto Sans SC', sans-serif;
