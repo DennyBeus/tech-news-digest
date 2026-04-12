@@ -84,6 +84,7 @@ def markdown_to_html(md_content: str) -> str:
     lines = md_content.strip().split('\n')
     html_parts = []
     in_list = False
+    after_h3 = False  # track whether next blockquote is an article meta line
 
     for line in lines:
         stripped = line.strip()
@@ -96,12 +97,14 @@ def markdown_to_html(md_content: str) -> str:
 
         # H1
         if stripped.startswith('# '):
+            after_h3 = False
             title = _process_inline(stripped[2:])
             html_parts.append(f'<h1>{title}</h1>')
             continue
 
         # H2
         if stripped.startswith('## '):
+            after_h3 = False
             if in_list:
                 html_parts.append('</ul>')
                 in_list = False
@@ -111,6 +114,7 @@ def markdown_to_html(md_content: str) -> str:
 
         # H3
         if stripped.startswith('### '):
+            after_h3 = True
             if in_list:
                 html_parts.append('</ul>')
                 in_list = False
@@ -121,7 +125,12 @@ def markdown_to_html(md_content: str) -> str:
         # Blockquote
         if stripped.startswith('> '):
             text = _process_inline(stripped[2:])
-            html_parts.append(f'<blockquote>{text}</blockquote>')
+            if after_h3:
+                # article meta line (score | source) — compact style
+                html_parts.append(f'<blockquote class="meta">{text}</blockquote>')
+                after_h3 = False
+            else:
+                html_parts.append(f'<blockquote>{text}</blockquote>')
             continue
 
         # Horizontal rule
@@ -219,8 +228,16 @@ h2 {
 h3 {
     font-size: 9pt;
     color: #374151;
-    margin-top: 10px;
-    margin-bottom: 4px;
+    margin-top: 18px;
+    margin-bottom: 3px;
+    padding-top: 10px;
+    border-top: 1px solid #d1d5db;
+}
+
+h2 + h3 {
+    border-top: none;
+    padding-top: 0;
+    margin-top: 6px;
 }
 
 blockquote {
@@ -231,6 +248,17 @@ blockquote {
     color: #374151;
     font-size: 10.5pt;
     border-radius: 0 6px 6px 0;
+}
+
+/* Meta line: score | source — compact, no background */
+blockquote.meta {
+    background: none;
+    border-left: none;
+    padding: 1px 0 2px 0;
+    margin: 0 0 4px 0;
+    color: #9ca3af;
+    font-size: 7.5pt;
+    border-radius: 0;
 }
 
 ul {
