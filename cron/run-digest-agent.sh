@@ -48,8 +48,8 @@ fi
 echo "[..] Exporting articles from DB..."
 cd "$SCRIPT_DIR"
 python3 scripts/delivery/export-latest.py \
-    --hours 24 \
-    --min-score 6 \
+    --hours 25 \
+    --min-score 5 \
     --top-n 100 \
     --output "$EXPORT_FILE"
 echo "[ok] Export complete: $EXPORT_FILE"
@@ -57,6 +57,7 @@ echo "[ok] Export complete: $EXPORT_FILE"
 # Launch Claude agent with Telegram plugin
 echo "[..] Starting Claude digest agent..."
 export MULTI_PARSER_DIR="$SCRIPT_DIR"
+export DIGEST_DATE=$(date -u +%Y%m%d)
 
 claude \
     --dangerously-skip-permissions \

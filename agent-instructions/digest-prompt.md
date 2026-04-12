@@ -14,7 +14,7 @@
 
 ### 2. Напиши переведённый дайджест
 
-Создай файл `/tmp/digest-final.md` со следующей структурой:
+Создай файл `/tmp/digest-$DIGEST_DATE.md` со следующей структурой:
 
 - Заголовок: `# Digest — <дата UTC>`
 - Подзаголовок: `> Статьи за 24ч | Отобрано: N | Скор >= 6`
@@ -27,7 +27,7 @@
 ### 3. Сгенерируй PDF
 
 ```bash
-cd $MULTI_PARSER_DIR && python3 scripts/delivery/generate-pdf.py --input /tmp/digest-final.md --output /tmp/digest-final.pdf
+cd $MULTI_PARSER_DIR && python3 scripts/delivery/generate-pdf.py --input /tmp/digest-$DIGEST_DATE.md --output /tmp/digest-$DIGEST_DATE.pdf
 ```
 
 ### 4. Отправь результат в Telegram
@@ -35,7 +35,7 @@ cd $MULTI_PARSER_DIR && python3 scripts/delivery/generate-pdf.py --input /tmp/di
 **Если статьи есть** — отправь PDF через tool `mcp__plugin_telegram_telegram__reply`:
 - `chat_id`: значение из переменной окружения `TELEGRAM_CHAT_ID`
 - `text`: краткое сообщение, например: `Дайджест за <дата>. Отобрано N статей (скор >= 6).`
-- `files`: `["/tmp/digest-final.pdf"]`
+- `files`: `["/tmp/digest-$DIGEST_DATE.pdf"]`
 
 **Если статей нет** — отправь только текст через tool `mcp__plugin_telegram_telegram__reply`:
 - `chat_id`: значение из переменной окружения `TELEGRAM_CHAT_ID`
@@ -45,4 +45,4 @@ cd $MULTI_PARSER_DIR && python3 scripts/delivery/generate-pdf.py --input /tmp/di
 
 - Не придумывай статьи — только то что есть в `/tmp/digest-raw.md`
 - Не меняй ссылки
-- Если `generate-pdf.py` упал с ошибкой — отправь содержимое `/tmp/digest-final.md` напрямую в Telegram (первые 4000 символов)
+- Если `generate-pdf.py` упал с ошибкой — отправь содержимое `/tmp/digest-$DIGEST_DATE.md` напрямую в Telegram (первые 4000 символов)
