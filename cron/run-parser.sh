@@ -2,12 +2,12 @@
 # Cron wrapper for multi-parser pipeline with Postgres storage.
 #
 # Install in crontab:
-#   0 6 * * * /home/user/deploy/multi-parser/cron/run-parser.sh >> /home/user/deploy/multi-parser/logs/cron.log 2>&1
+#   0 6 * * * /home/user/deploy/multi-parser/cron/run-parser.sh >> /home/user/deploy/multi-parser/logs/parser/cron.log 2>&1
 #
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-LOG_DIR="$SCRIPT_DIR/logs"
+LOG_DIR="$SCRIPT_DIR/logs/parser"
 TIMESTAMP=$(date +%Y%m%d-%H%M%S)
 
 # Source environment variables
@@ -38,6 +38,7 @@ EXIT_CODE=${PIPESTATUS[0]}
 find /tmp -name "td-merged-*.json" -mtime +7 -delete 2>/dev/null || true
 find /tmp -name "td-merged-*.meta.json" -mtime +7 -delete 2>/dev/null || true
 find "$LOG_DIR" -name "run-*.log" -mtime +30 -delete 2>/dev/null || true
+find "$LOG_DIR" -name "cron.log" -size +10M -delete 2>/dev/null || true
 
 # Cleanup old DB records (articles older than 30 days)
 if [ $EXIT_CODE -eq 0 ]; then

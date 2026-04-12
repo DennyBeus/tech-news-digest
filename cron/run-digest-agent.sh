@@ -6,7 +6,11 @@
 # launches Claude agent which translates, generates PDF and sends to Telegram.
 #
 # Install in crontab (06:30 UTC):
-#   30 6 * * * /path/to/multi-parser/cron/run-digest-agent.sh >> /path/to/multi-parser/logs/digest-agent.log 2>&1
+#   30 6 * * * /path/to/multi-parser/cron/run-digest-agent.sh >> /path/to/multi-parser/logs/digest/cron.log 2>&1
+#
+# Log structure:
+#   logs/digest/run-YYYYMMDD-HHMMSS.log  — per-run log (kept 30 days)
+#   logs/digest/cron.log                 — crontab stdout/stderr redirect
 #
 # Required env vars (set in .env):
 #   DATABASE_URL       — Postgres connection string
@@ -17,7 +21,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-LOG_DIR="$SCRIPT_DIR/logs"
+LOG_DIR="$SCRIPT_DIR/logs/digest"
 TIMESTAMP=$(date +%Y%m%d-%H%M%S)
 EXPORT_FILE="/tmp/digest-raw.md"
 PROMPT_FILE="$SCRIPT_DIR/agent-instructions/digest-prompt.md"
@@ -31,6 +35,11 @@ if [ -f "$SCRIPT_DIR/.env" ]; then
 fi
 
 mkdir -p "$LOG_DIR"
+
+RUN_LOG="$LOG_DIR/run-${TIMESTAMP}.log"
+
+# All output goes to both per-run log and stdout (captured by crontab → cron.log)
+exec > >(tee -a "$RUN_LOG") 2>&1
 
 echo "=== Digest agent run $TIMESTAMP ==="
 
@@ -63,5 +72,8 @@ claude \
     --dangerously-skip-permissions \
     --channels plugin:telegram@claude-plugins-official \
     -p "$(cat "$PROMPT_FILE")"
+
+# Cleanup old per-run logs
+find "$LOG_DIR" -name "run-*.log" -mtime +30 -delete 2>/dev/null || true
 
 echo "=== Digest agent finished ==="
